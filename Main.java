@@ -33,6 +33,11 @@ public class Main extends Application {
 		dueDatePicker.setPromptText("Enter due date");
 		TaskTitle = taskField.getText();
 		TaskDueDate = dueDatePicker.getValue();
+		try {		
+		index = Integer.parseInt(taskField.getText());		
+		} catch (NumberFormatException error) {
+		System.out.println("Error");
+		}
 		TaskCon = new TaskController();
 		addButton = new Button("Add Task");
 		deleteButton = new Button("Delete Task");
@@ -60,4 +65,5 @@ public class Main extends Application {
 			TaskCon.editTask(index, TaskTitle, TaskDueDate);
 		}
 	}
+
 }
