@@ -1,97 +1,85 @@
 package taskmanager;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import java.time.LocalDate;
-import javafx.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Main extends Application {
+class TaskController {
 	
-	Button addButton;
-	Button deleteButton;
-	Button editButton;
-	Button sortButton;
-	String TaskTitle;
-	LocalDate TaskDueDate;
-	int index;
-	Task Task;
-	TaskController TaskCon = new TaskController();
-	List<Task> tasks = TaskCon.getAllTasks();
+	private List<Task> tasks = new ArrayList<>();
 	
-	public static void main(String[] args) {
+	public void addTask(String title, LocalDate dueDate) {
 		
-		launch(args);
+		tasks.add(new Task(title, dueDate));
+		int index = tasks.indexOf(title);
+		System.out.println("Task added: " + title + ", Due: " + dueDate + ", Index: " + index);
 		
 	}
 	
-	@Override
-	public void start(Stage primaryStage) {
+	public void deleteTask(int index) {	
 		
-		Label titleLabel = new Label("📝 Task Organizer");
-		titleLabel.setStyle("-fx-font-size: 24px; -fx-padding: 10px;");
-		
-		TextField taskField = new TextField();
-		taskField.setPromptText("Enter task name");
-		
-		TextField indexField = new TextField();
-		indexField.setPromptText("Enter index");
-		
-		DatePicker dueDatePicker = new DatePicker();
-		dueDatePicker.setPromptText("Enter due date");
-		
-		TaskTitle = taskField.getText();
-		TaskDueDate = dueDatePicker.getValue();
-		
-		try {		
-		index = Integer.parseInt(indexField.getText());		
-		} catch (NumberFormatException error) {
+		if (index >= 0 && index < tasks.size()) {
+			
+			Task removed = tasks.remove(index);
+			System.out.println("Task deleted: " + removed.getTitle());
+			
 		}
-		
-		TaskCon = new TaskController();
-		addButton = new Button("Add Task");
-		deleteButton = new Button("Delete Task");
-		editButton = new Button("Edit Task");
-		sortButton = new Button("Sort Task");
-		
-		HBox inputBox = new HBox(10, taskField, indexField, dueDatePicker, addButton, deleteButton, editButton, sortButton);
-		inputBox.setStyle("-fx-padding: 10px;");
-		
-		ListView<String> taskListView = new ListView<>();
-		taskListView.setPrefHeight(200);
-		
-		VBox root = new VBox(10, titleLabel, inputBox, taskListView);
-		root.setStyle("-fx-padding: 20px;");
-		
-		Scene scene = new Scene(root, 600, 400);
-		primaryStage.setTitle("Task Organizer");
-		primaryStage.setScene(scene);
-		primaryStage.show();
 		
 	}
 	
-	public void AddTask(ActionEvent click) {
+	public void editTask(int index, String newTitle, LocalDate newDueDate) {
 		
-		if (click.getSource() == addButton) {
+		if (index >= 0 && index < tasks.size()) {
 			
-			TaskCon.addTask(TaskTitle,TaskDueDate);
+			Task task = tasks.get(index);
+			task.setTitle(newTitle);
+			task.setDueDate(newDueDate);
+			System.out.println("Task updated: " + newTitle);
 			
 		}
 		
-		else if (click.getSource() == deleteButton) {
+	}
+	
+	public void markTaskCompleted(int index) {	
+		
+		if (index >= 0 && index < tasks.size()) {
 			
-			TaskCon.deleteTask(index);
+			tasks.get(index).setCompleted(true);
+			System.out.println("Task completed!");
 			
 		}
 		
-		else if (click.getSource() == editButton) {
-			
-			TaskCon.editTask(index, TaskTitle, TaskDueDate);
-			
-		}
+	}
+	
+	public List<Task> getAllTasks() {	
+		
+		List<Task> allTasks = new ArrayList<>(tasks);
+		
+		System.out.println("All Tasks: " + allTasks);
+		
+		return allTasks;
+		
+//		return new ArrayList<>(tasks);
+		
+	}
+	
+	public List<Task> getPendingTasks() {	
+		
+		return tasks.stream().filter(t -> !t.isCompleted()).collect(Collectors.toList());
+		
+	}
+	
+	public List<Task> getCompletedTasks() {	
+		
+		return tasks.stream().filter(Task::isCompleted).collect(Collectors.toList());
+		
+	}
+	
+	public void sortByDueDate() {
+		
+		tasks.sort(Comparator.comparing(Task::getDueDate));
 		
 	}
 	
