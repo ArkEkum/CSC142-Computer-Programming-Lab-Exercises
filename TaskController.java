@@ -13,7 +13,8 @@ class TaskController {
 	public void addTask(String title, LocalDate dueDate) {
 		
 		tasks.add(new Task(title, dueDate));
-		System.out.println("Task added: " + title);
+		int index = tasks.indexOf(title);
+		System.out.println("Task added: " + title + ", Due: " + dueDate + ", Index: " + index);
 		
 	}
 	
@@ -54,7 +55,13 @@ class TaskController {
 	
 	public List<Task> getAllTasks() {	
 		
-		return new ArrayList<>(tasks);
+		List<Task> allTasks = new ArrayList<>(tasks);
+		
+		System.out.println("All Tasks: " + allTasks);
+		
+		return allTasks;
+		
+//		return new ArrayList<>(tasks);
 		
 	}
 	
@@ -70,7 +77,7 @@ class TaskController {
 		
 	}
 	
-	public void sortByDueDate() {	
+	public void sortByDueDate() {
 		
 		tasks.sort(Comparator.comparing(Task::getDueDate));
 		
