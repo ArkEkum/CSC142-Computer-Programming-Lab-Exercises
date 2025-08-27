@@ -1,86 +1,166 @@
 package taskmanager;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
+import javafx.event.ActionEvent;
 import java.util.List;
-import java.util.stream.Collectors;
 
-class TaskController {
+public class Main extends Application {
 	
-	private List<Task> tasks = new ArrayList<>();
+	Button addButton;
+	Button deleteButton;
+	Button editButton;
+	Button markCompletedButton;
+	Button sortDueDateButton;
+	Button sortPriorityButton;
+	Button showTaskButton;
 	
-	public void addTask(String title, LocalDate dueDate) {
+	TextField taskField;
+	TextField indexField;
+	
+	DatePicker dueDatePicker;
+	LocalDate TaskDueDate;
+	
+	String TaskTitle;
+	int index;
+	
+	Task Task;
+	TaskController TaskCon = new TaskController();
+	
+	public static void main(String[] args) {
 		
-		tasks.add(new Task(title, dueDate));
-		int index = tasks.indexOf(title);
-		System.out.println("Task added: " + title + ", Due: " + dueDate + ", Index: " + index);
+		launch(args);
 		
 	}
 	
-	public void deleteTask(int index) {	
+	@Override
+	public void start(Stage primaryStage) {
 		
-		if (index >= 0 && index < tasks.size()) {
+		Label titleLabel = new Label("📝 Task Organizer");
+		titleLabel.setStyle("-fx-font-size: 24px; -fx-padding: 10px;");
+		
+		taskField = new TextField();
+		taskField.setPromptText("Enter task name");
+		
+		indexField = new TextField();
+		indexField.setPromptText("Enter index");
+		
+		dueDatePicker = new DatePicker();
+		dueDatePicker.setPromptText("Enter due date");
+
+		TaskCon = new TaskController();
+		
+		addButton = new Button("Add Task");
+		addButton.setOnAction(e -> {
 			
-			Task removed = tasks.remove(index);
-			System.out.println("Task deleted: " + removed.getTitle());
+			TaskTitle = taskField.getText();
 			
-		}
-		
-	}
-	
-	public void editTask(int index, String newTitle, LocalDate newDueDate) {
-		
-		if (index >= 0 && index < tasks.size()) {
+			TaskDueDate = dueDatePicker.getValue();
 			
-			Task task = tasks.get(index);
-			task.setTitle(newTitle);
-			task.setDueDate(newDueDate);
-			System.out.println("Task updated: " + newTitle);
+			TaskCon.addTask(TaskTitle,TaskDueDate);
 			
-		}
+		});
 		
-	}
-	
-	public void markTaskCompleted(int index) {	
-		
-		if (index >= 0 && index < tasks.size()) {
+		deleteButton = new Button("Delete Task");
+		deleteButton.setOnAction(e -> {
 			
-			tasks.get(index).setCompleted(true);
-			System.out.println("Task completed!");
+			try {
+				
+				index = Integer.parseInt(indexField.getText());	
 			
-		}
+			}
+			
+			catch (NumberFormatException error) {
+				
+				// Error message
+				
+			}
+			
+			TaskCon.deleteTask(index);
+			
+		});
+		
+		editButton = new Button("Edit Task");
+		editButton.setOnAction(e -> {
+			
+			TaskTitle = taskField.getText();
+			
+			TaskDueDate = dueDatePicker.getValue();
+			
+			try {
+				
+				index = Integer.parseInt(indexField.getText());	
+			
+			}
+			
+			catch (NumberFormatException error) {
+				
+				// Error message
+				
+			}
+			
+			TaskCon.editTask(index, TaskTitle, TaskDueDate);
+			
+		});
+		
+		markCompletedButton = new Button("Mark Task Complete");
+		markCompletedButton.setOnAction(e -> {
+			
+			try {
+				
+				index = Integer.parseInt(indexField.getText());	
+			
+			}
+			
+			catch (NumberFormatException error) {
+				
+				// Error message
+				
+			}
+			
+			TaskCon.markTaskCompleted(index);
+			
+		});		
+		
+		sortDueDateButton = new Button("Sort Tasks By Due Date");
+		editButton.setOnAction(e -> {
+			
+			TaskCon.sortByDueDate();
+
+		});
+		
+		sortPriorityButton = new Button("Sort Tasks By Priority");
+		editButton.setOnAction(e -> {
+			
+			TaskCon.getPendingTasks();
+
+		});
+		
+		showTaskButton = new Button("Show All Tasks");
+		editButton.setOnAction(e -> {
+			
+			TaskCon.getAllTasks();
+
+		});
+		
+		HBox inputBox = new HBox(10, taskField, indexField, dueDatePicker, addButton, deleteButton, markCompletedButton, editButton, sortDueDateButton, sortPriorityButton, showTaskButton);
+		inputBox.setStyle("-fx-padding: 10px;");
+		
+		ListView<String> taskListView = new ListView<>();
+		taskListView.setPrefHeight(200);
+		
+		VBox root = new VBox(10, titleLabel, inputBox, taskListView);
+		root.setStyle("-fx-padding: 20px;");
+		
+		Scene scene = new Scene(root, 600, 400);
+		primaryStage.setTitle("Task Organizer");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 		
 	}
-	
-	public List<Task> getAllTasks() {	
-		
-		List<Task> allTasks = new ArrayList<>(tasks);
-		
-		System.out.println("All Tasks: " + allTasks);
-		
-		return allTasks;
-		
-//		return new ArrayList<>(tasks);
-		
-	}
-	
-	public List<Task> getPendingTasks() {	
-		
-		return tasks.stream().filter(t -> !t.isCompleted()).collect(Collectors.toList());
-		
-	}
-	
-	public List<Task> getCompletedTasks() {	
-		
-		return tasks.stream().filter(Task::isCompleted).collect(Collectors.toList());
-		
-	}
-	
-	public void sortByDueDate() {
-		
-		tasks.sort(Comparator.comparing(Task::getDueDate));
-		
-	}
-	
+
 }
