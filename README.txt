@@ -1,26 +1,7 @@
-The purpose of the assignment: The purpose of the assignment was to be able to use the Scanner class in your Java program to gather input from the user to calculate and display numerical results using the if-else logic correctly.
+The purpose of the project: The purpose of the project was to showcase all the material learned from this course into a final group project. The project we chose to do was the Task Organizer. This project demonstrates how to call methods, store values in a List, showcase a user-friendly GUI, and much more. We also used UML diagram to demonstrate a planned structure for the programming project. The UML diagram included classes, methods, and relationships between classes.
 
-A brief description of your Java code: My first program calculates the letter grade for a student using three test scores. My second program calculates monthly bank fees using the number of checks written.
+A brief description of your Java code: The Java program organizes tasks the user inputs which can be edited, marked complete and by sorted by due date or priority.
 
-Example input/output:
-Test_Score_Average:
-Input: 
-91
-93
-96
+Example input/output: The user enters "Groceries" due on "2025-08-27", "Cleaning" due on "2025-08-24", and "Laundry" due on "2025-08-30". The user can then choose to change the task name and due date ("Groceries" -> "Exercise" and "2025-08-27" -> "2025-08-20") by editing the task. The user can also sort the tasks by due date ("Exercise", "Cleaning", "Laundry").
 
-Output:
-93.3
-A
-
-
-Bank_Charges_Calc:
-Input:
-66
-
-Output:
-$10.00
-$0.04
-$12.64
-
-Any challenges you faced: One challenge I faced was displaying the outputs correctly. The numbers I was getting for the output did not display the correct number of digits in the decimal places. I resolved this issue by using "%.2f" to display the correct number of digits in the decimal place as I wanted.
+Any challenges you faced: One challenge we faced was getting the tasks to be sorted by due date and priority. This issue was solved using a temporary new List that updated the tasks accordingly.
